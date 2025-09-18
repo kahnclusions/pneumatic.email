@@ -1,8 +1,8 @@
 # pneumatic-data
 
-Whether running in a Tauri native app, or as a PWA / browser web app, this crate provides a common Rust interface for interacting with the Sqlite3 database. On Tauri the backend can access the database as usual, and on PWA/Browsers the app will run this crate using WASM in a web worker.
+This crate provides a common Rust interface for interacting with Pneumatic's Sqlite3 database, so that both the native app (Tauri), or the webapp (Browsers), can access the database. In browsers this is intended to be compiled to WASM and run in a web worker.
 
-The frontend library for sending commands to backend should be backend-agnostic such that either the Tauri backend or the Web Worker backend can be used.
+The frontend should include a command library that abstracts away the backend so that a common set of commands can be sent both via Tauri or web worker.
 
 ```
                                 ┌────────────┐                                         
