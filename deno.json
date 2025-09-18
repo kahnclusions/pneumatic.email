@@ -1,0 +1,14 @@
+{
+  "workspace": ["./pneumatic-app"],
+  "tasks": {
+    // Interactively forward to the Tauri CLI with CWD set to myproject-tauri
+    "tauri": {
+      "command": "deno run -A npm:@tauri-apps/cli",
+      "cwd": "pneumatic-tauri"
+    },
+
+    // convenience (optional):
+    "tauri:dev": "deno task tauri dev",
+    "tauri:build": "deno task tauri build"
+  }
+}

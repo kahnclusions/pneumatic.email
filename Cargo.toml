@@ -1,0 +1,6 @@
+[workspace]
+members = [
+  "pneumatic-tauri",
+  "pneumatic-data"
+]
+resolver = "2"

@@ -1,0 +1,44 @@
+{
+  "name": "pneumatic",
+  "version": "0.1.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "dev": "vike dev",
+    "build": "vike build",
+    "serve": "vike preview",
+    "tauri": "tauri"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@kobalte/core": "^0.13.11",
+    "@solidjs/router": "^0.15.3",
+    "@tailwindcss/vite": "^4.1.13",
+    "@tauri-apps/plugin-deep-link": "~2.4.3",
+    "@tauri-apps/plugin-fs": "~2.4.2",
+    "@tauri-apps/plugin-log": "~2.7.0",
+    "@tauri-apps/plugin-sql": "~2.3.0",
+    "@tauri-apps/plugin-store": "~2.4.0",
+    "@tauri-apps/plugin-window-state": "~2.4.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "solid-js": "^1.9.3",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-opener": "^2",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7",
+    "vike": "^0.4.240",
+    "vike-solid": "^0.7.13",
+    "vite-tsconfig-paths": "^5.1.4"
+  },
+  "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
+    "@types/node": "^24.5.1",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "tailwindcss": "^4.1.13",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.3",
+    "vite-plugin-solid": "^2.11.0",
+    "@tauri-apps/cli": "^2"
+  }
+}
