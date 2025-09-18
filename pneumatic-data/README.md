@@ -4,6 +4,7 @@ Whether running in a Tauri native app, or as a PWA / browser web app, this crate
 
 The frontend library for sending commands to backend should be backend-agnostic such that either the Tauri backend or the Web Worker backend can be used.
 
+```
                                 ┌────────────┐                                         
                                 │            │                                         
                           ┌────►│ Web Worker ├───────┐                                 
@@ -17,4 +18,4 @@ The frontend library for sending commands to backend should be backend-agnostic 
                           └────►│ Tauri process ├────┘                                 
                                 │               │                                      
                                 └───────────────┘                                      
-
+```
