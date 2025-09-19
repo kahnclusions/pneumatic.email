@@ -1,6 +1,8 @@
-# Pneumatic
+# Pneumatic Email
 
-** ⚠️ Danger: very early WIP, do not use.**
+It's a series of tubes!
+
+**⚠️ Danger: very early WIP, do not use.**
 
 Pneumatic is an e-mail, contacts and calendar app for JMAP services that can run as a native app with Tauri, as a progressive web app (PWA), or as a standard browser web app. Pneumatic is built using SolidJS, Vike and Tauri.
 
