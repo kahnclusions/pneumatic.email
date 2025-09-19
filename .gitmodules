@@ -1,0 +1,3 @@
+[submodule "jmap-client"]
+	path = jmap-client
+	url = git@github.com:kahnclusions/jmap-client.git

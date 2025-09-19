@@ -2,5 +2,6 @@
 members = [
   "pneumatic-tauri",
   "pneumatic-data"
-]
+, "pneumatic-jmap"
+, "jmap-client"]
 resolver = "2"
