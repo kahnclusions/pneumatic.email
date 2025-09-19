@@ -1,6 +1,5 @@
-# Pneumatic Email
+# 📮 Pneumatic Email
 
-It's a series of tubes!
 
 **⚠️ Danger: very early WIP, do not use.**
 
@@ -43,4 +42,4 @@ This project is licensed under the _GNU Affero General Public License, Version 3
 
 ## Kudos
 
-Shout out to [Readest](https://github.com/readest/readest) which is an excellent ebook reader app also built with Tauri that serves as an amazing example.
+Shout-out to [Readest](https://github.com/readest/readest) which is an excellent ebook reader app also built with Tauri that serves as an amazing example.
