@@ -1,10 +1,9 @@
 use anyhow::bail;
-use pneumatic_common::dto::account::MailboxDTO;
 use serde::{Deserialize, Serialize};
 use sqlx::types::Uuid;
 use sqlx::FromRow;
 
-use crate::state::Db;
+use crate::db::Db;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ContactProperty {

@@ -28,6 +28,7 @@ pub struct JmapOauthServer {
 /// If we can auto-detect the JMAP service on this e-mail's domain, then
 /// we can default to this. Otherwise the user will have to specify their
 /// JMAP server by hand.
+#[tracing::instrument(skip(email))]
 pub async fn lookup_jmap_domain(email: &str) -> anyhow::Result<String> {
     let (name, domain) = email.split_once("@").unwrap();
 
@@ -63,6 +64,7 @@ pub async fn lookup_jmap_domain(email: &str) -> anyhow::Result<String> {
 
 /// Given a base URL, which can be just a domain name, lookup its .well-known directory 
 /// to find an oauth server, which tells us we can use oauth to login with this server.
+#[tracing::instrument]
 pub async fn lookup_oauth_server(base_url: &str) -> anyhow::Result<(String, JmapOauthServer)> {
     let mut base_url = if base_url.contains("@") {
         lookup_jmap_domain(base_url).await?
@@ -101,6 +103,7 @@ pub async fn lookup_oauth_server(base_url: &str) -> anyhow::Result<(String, Jmap
     Ok((base_url, json))
 }
 
+#[tracing::instrument]
 fn get_client() -> anyhow::Result<
     BasicClient<EndpointNotSet, EndpointNotSet, EndpointNotSet, EndpointNotSet, EndpointNotSet>,
 > {
@@ -120,6 +123,7 @@ pub struct JmapOauthChallenge {
   csrf_token: String
 }
 
+#[tracing::instrument(skip(email))]
 pub async fn start_authentication(
     server_url: String,
     oauth_server: &JmapOauthServer,
@@ -165,6 +169,7 @@ pub struct JmapOauthAccessToken {
 /// Given an auth_code from a successful oauth login, and the challenge that
 /// was generated at the start of the oauth flow, try to exchange the auth code
 /// for an access token from the JMAP server.
+#[tracing::instrument(skip(auth_code, challenge))]
 pub async fn exchange_code_for_token(
     auth_code: &str,
     challenge: OauthChallenge,

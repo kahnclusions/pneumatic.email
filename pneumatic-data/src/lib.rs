@@ -1,6 +1,8 @@
 pub mod account;
 pub mod address_book;
 pub mod contact;
+pub mod db;
+pub mod oauth2_challenge;
 
 pub fn add(left: u64, right: u64) -> u64 {
     left + right

@@ -16,3 +16,6 @@ url = "2.5.7"
 # hickory-client = "0.25.2"
 hickory-client = { version = "0.24.4", features = ["dns-over-https", "dns-over-https-rustls", "dnssec"] }
 tokio = { version = "1.47.1", features = ["full"] }
+tracing = "0.1.41"
+tracing-tree = "0.4.0"
+tracing-subscriber = "0.3.20"
