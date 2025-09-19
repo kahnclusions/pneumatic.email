@@ -1,6 +1,6 @@
 # Pneumatic
 
-**Danger: early WIP, do not use.**
+** ⚠️ Danger: very early WIP, do not use.**
 
 Pneumatic is an e-mail, contacts and calendar app for JMAP services that can run as a native app with Tauri, as a progressive web app (PWA), or as a standard browser web app. Pneumatic is built using SolidJS, Vike and Tauri.
 
@@ -29,7 +29,8 @@ deno task dev:web
 
 ### Project structure
 
-* `pneumatic-app` the Vike+SolidJS web frontend.
-* `pneumatic-data` the data library abstracting around the Sqlite3 database.
+* `pneumatic-app` the SolidJS+Vike web frontend.
+* `pneumatic-data` library abstracting around the Sqlite3 database.
+* `pneumatic-jmap` library abstracting around JMAP services.
 * `pneumatic-tauri` the Tauri native application.
 
