@@ -34,3 +34,11 @@ deno task dev:web
 * `pneumatic-jmap` library abstracting around JMAP services.
 * `pneumatic-tauri` the Tauri native application.
 
+
+## License
+
+This project is licensed under the _GNU Affero General Public License, Version 3_.
+
+## Kudos
+
+Shout out to [Readest](https://github.com/readest/readest) which is an excellent ebook reader app also built with Tauri that serves as an amazing example.
