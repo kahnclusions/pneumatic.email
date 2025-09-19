@@ -32,17 +32,20 @@ pub struct AccountEmail {
     pub email_id: String,
 }
 
+#[derive(Clone, Debug)]
 pub struct AccountRepo {
   db: Db
 }
 
 impl AccountRepo {
+  #[tracing::instrument]
   pub fn new(db: &Db) -> Self {
     Self {
       db: db.clone()
     }
   }
 
+  #[tracing::instrument]
   pub async fn list_accounts(&self) -> anyhow::Result<Vec<Account>> {
       let accounts = sqlx::query_as::<_, Account>("SELECT * FROM accounts")
           .fetch_all(&self.db)
@@ -50,6 +53,7 @@ impl AccountRepo {
       Ok(accounts)
   }
 
+  #[tracing::instrument]
   pub async fn get_account(&self, id: &Uuid) -> anyhow::Result<Account> {
       let account = sqlx::query_as::<_, Account>("SELECT * FROM accounts WHERE id = ?1")
           .bind(id)
@@ -58,6 +62,7 @@ impl AccountRepo {
       Ok(account)
   }
 
+  #[tracing::instrument]
   pub async fn find_account(
       &self,
       server_url: &str,
@@ -73,6 +78,7 @@ impl AccountRepo {
       Ok(account)
   }
 
+  #[tracing::instrument(skip(access_token, refresh_token))]
   pub async fn create_account(
       &self,
       username: String,
@@ -99,6 +105,7 @@ impl AccountRepo {
       Ok(self.get_account(&id).await?)
   }
 
+  #[tracing::instrument(skip(access_token, refresh_token))]
   pub async fn update_auth(
       &self,
       id: Uuid,
@@ -119,6 +126,7 @@ impl AccountRepo {
       Ok(self.get_account(&id).await?)
   }
 
+  #[tracing::instrument]
   pub async fn update_mailbox_state(
       &self,
       id: &Uuid,
@@ -133,6 +141,7 @@ impl AccountRepo {
       Ok(self.get_account(&id).await?)
   }
 
+  #[tracing::instrument]
   pub async fn update_email_query(
       &self,
       id: &Uuid,
@@ -147,6 +156,7 @@ impl AccountRepo {
       Ok(self.get_account(&id).await?)
   }
 
+  #[tracing::instrument]
   pub async fn update_email_query_loaded(
       &self,
       id: &Uuid,
@@ -161,6 +171,7 @@ impl AccountRepo {
       Ok(self.get_account(&id).await?)
   }
 
+  #[tracing::instrument]
   pub async fn update_email_state(
       &self,
       id: &Uuid,
@@ -175,6 +186,7 @@ impl AccountRepo {
       Ok(self.get_account(&id).await?)
   }
 
+  #[tracing::instrument]
   pub async fn insert_account_email(
       &self,
       account_id: &Uuid,
@@ -189,6 +201,7 @@ impl AccountRepo {
       Ok(())
   }
 
+  #[tracing::instrument]
   pub async fn delete_account_email(
       &self,
       account_id: &Uuid,
@@ -201,5 +214,37 @@ impl AccountRepo {
           .await?;
 
       Ok(())
+  }
+
+  #[tracing::instrument(skip(access_token, refresh_token))]
+  pub async fn upsert_account(
+    &self, 
+    server_url: &str, 
+    access_token: String,
+    refresh_token: Option<String>,
+    expires: Option<DateTime<Utc>>,
+    username: &str,
+    account_name: &str
+  ) -> anyhow::Result<Account> {
+    let account = self.find_account(server_url, username).await?;
+
+    if let Some(account) = account {
+        tracing::debug!("Account already exists, updating...");
+        // If this account already exists, update with new auth info.
+        self.update_auth(account.id, access_token, refresh_token, expires).await
+    } else {
+        tracing::debug!("No existing account, creating...");
+        // New account, insert into DB.
+        self.create_account(
+            username.to_owned(),
+            "".to_string(),
+            server_url.to_owned(),
+            account_name.to_owned(),
+            access_token,
+            refresh_token,
+            expires,
+        )
+        .await
+    }
   }
 }

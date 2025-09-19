@@ -5,13 +5,15 @@ use crate::db::Db;
 
 #[derive(Clone, Debug, Serialize, Deserialize, FromRow)]
 pub struct OAuth2Challenge {
-  email: String,
-  server_url: String,
-  csrf_token: String,
-  verifier: String,
-  token_url: String
+  pub id: u32,
+  pub email: String,
+  pub server_url: String,
+  pub csrf_token: String,
+  pub verifier: String,
+  pub token_url: String
 }
 
+#[derive(Clone, Debug)]
 pub struct OAuth2ChallengeRepo {
   db: Db
 }

@@ -108,6 +108,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "anyhow-tauri"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b911500b8bce90dd5671a68fe4313f2c8614b9a80c8454d8d00f8721988657f9"
+dependencies = [
+ "anyhow",
+ "serde",
+]
+
+[[package]]
 name = "arrayvec"
 version = "0.7.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3596,8 +3606,12 @@ dependencies = [
 name = "pneumatic"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
+ "anyhow-tauri",
  "cocoa",
  "objc",
+ "pneumatic-data",
+ "pneumatic-jmap",
  "rand 0.8.5",
  "serde",
  "serde_json",
@@ -3611,6 +3625,11 @@ dependencies = [
  "tauri-plugin-sql",
  "tauri-plugin-store",
  "tauri-plugin-window-state",
+ "tracing",
+ "tracing-subscriber",
+ "tracing-tree",
+ "url",
+ "uuid",
 ]
 
 [[package]]
@@ -3622,6 +3641,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sqlx",
+ "tracing",
  "uuid",
 ]
 

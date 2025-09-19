@@ -30,7 +30,7 @@ pub struct JmapOauthServer {
 /// JMAP server by hand.
 #[tracing::instrument(skip(email))]
 pub async fn lookup_jmap_domain(email: &str) -> anyhow::Result<String> {
-    let (name, domain) = email.split_once("@").unwrap();
+    let (_name, domain) = email.split_once("@").unwrap();
 
     // TODO: use the system provided DNS.
     let address = "8.8.8.8:53".parse().unwrap();
@@ -119,8 +119,9 @@ fn get_client() -> anyhow::Result<
 }
 
 pub struct JmapOauthChallenge {
-  auth_url: String,
-  csrf_token: String
+  pub auth_url: String,
+  pub csrf_token: String,
+  pub verifier: String
 }
 
 #[tracing::instrument(skip(email))]
@@ -144,11 +145,15 @@ pub async fn start_authentication(
         .set_pkce_challenge(pkce_challenge)
         .url();
 
-    Ok(JmapOauthChallenge { auth_url: auth_url.to_string(), csrf_token: csrf_token.secret().to_owned() })
+    Ok(JmapOauthChallenge { 
+      auth_url: auth_url.to_string(), 
+      verifier: pkce_verifier.secret().to_string(), 
+      csrf_token: csrf_token.secret().to_owned() 
+    })
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct OauthChallenge {
+pub struct OAuthChallenge {
     pub id: u32,
     pub email: String,
     pub server_url: String,
@@ -159,11 +164,11 @@ pub struct OauthChallenge {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct JmapOauthAccessToken {
-  access_token: String,
-  refresh_token: Option<String>,
-  expires: Option<DateTime<Utc>>,
-  username: String,
-  account_name: String
+  pub access_token: String,
+  pub refresh_token: Option<String>,
+  pub expires: Option<DateTime<Utc>>,
+  pub username: String,
+  pub account_name: String
 }
 
 /// Given an auth_code from a successful oauth login, and the challenge that
@@ -172,7 +177,7 @@ pub struct JmapOauthAccessToken {
 #[tracing::instrument(skip(auth_code, challenge))]
 pub async fn exchange_code_for_token(
     auth_code: &str,
-    challenge: OauthChallenge,
+    challenge: OAuthChallenge,
 ) -> anyhow::Result<JmapOauthAccessToken> {
     let http_client = reqwest::ClientBuilder::new()
         .redirect(reqwest::redirect::Policy::none())

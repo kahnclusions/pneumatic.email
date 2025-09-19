@@ -1,7 +1,12 @@
+mod cmd;
 mod macos;
+mod state;
+mod oauth;
+mod settings;
 
 #[cfg(desktop)]
 use std::path::PathBuf;
+use pneumatic_data::{account::AccountRepo, db::init_db, oauth2_challenge::OAuth2ChallengeRepo};
 #[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
 use tauri::{utils::config::BackgroundThrottlingPolicy, WebviewUrl, WebviewWindowBuilder};
@@ -9,6 +14,9 @@ use tauri::{utils::config::BackgroundThrottlingPolicy, WebviewUrl, WebviewWindow
 use tauri::{AppHandle, Listener, Manager, Url};
 #[cfg(desktop)]
 use tauri_plugin_fs::FsExt;
+use tauri_plugin_store::StoreExt;
+
+use crate::{oauth::{oauth_start, open_url}, settings::get_settings, state::AppState};
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
@@ -46,10 +54,58 @@ pub fn run() {
     builder
         .invoke_handler(tauri::generate_handler![
             greet,
+            oauth_start,
+            cmd::fetch_accounts,
+            get_settings,
+            open_url,
             #[cfg(target_os = "macos")]
             macos::traffic_light::set_traffic_lights,
         ])
         .setup(|app| {
+            let store = app.store("pneumatic.json")?;
+
+            // Initialize the database.
+            let handle = app.handle().to_owned();
+            tauri::async_runtime::block_on(async move {
+                let mut data_dir = handle.path().app_data_dir().expect("failed to get data_dir");
+                let db = init_db(&data_dir).await;
+                let account_repo = AccountRepo::new(&db);
+                let challenge_repo = OAuth2ChallengeRepo::new(&db);
+                tracing::info!("Database initialized");
+                handle.manage(AppState { db, store, account_repo, challenge_repo });
+            });
+
+            // Setup deep links, primarily to handle OAuth callbacks.
+            #[cfg(any(target_os = "macos", windows, target_os = "linux"))]
+            {
+                use tauri_plugin_deep_link::DeepLinkExt;
+                let handle = app.handle().to_owned();
+                app.deep_link().on_open_url(move |event| {
+                    use tauri::async_runtime::spawn;
+
+                    let url = event
+                        .urls()
+                        .iter()
+                        .map(|url| url.to_string())
+                        .into_iter()
+                        .next()
+                        .unwrap();
+                    tracing::debug!("got some deep links: {:?}", url);
+                    let handle = handle.clone();
+                    spawn(async move {
+                        use crate::oauth::oauth_callback;
+
+                        let res = oauth_callback(handle, url).await;
+                        if let Err(err) = res {
+                            tracing::error!(
+                                "Failed to handle oauth callback because: {:?}",
+                                err.to_string()
+                            );
+                        }
+                    });
+                });
+            }
+
             let win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
                 .background_throttling(BackgroundThrottlingPolicy::Disabled)
                 .background_color(tauri::window::Color(50, 49, 48, 255));
