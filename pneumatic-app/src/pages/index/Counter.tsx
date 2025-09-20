@@ -1,9 +1,9 @@
-import { createSignal } from "solid-js";
+import { createSignal } from "solid-js"
 
-export { Counter };
+export { Counter }
 
 function Counter() {
-  const [count, setCount] = createSignal(0);
+  const [count, setCount] = createSignal(0)
 
   return (
     <button
@@ -11,9 +11,9 @@ function Counter() {
       class={
         "inline-block border border-black rounded bg-gray-200 px-2 py-1 text-xs font-medium uppercase leading-normal"
       }
-      onClick={() => setCount((count) => count + 1)}
+      onClick={() => setCount(count => count + 1)}
     >
       Counter {count()}
     </button>
-  );
+  )
 }

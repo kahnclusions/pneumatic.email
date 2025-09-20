@@ -1,6 +1,6 @@
-import type { Config } from "vike/types";
-import vikeSolid from "vike-solid/config";
-import Layout from "../layouts/LayoutDefault.js";
+import vikeSolid from "vike-solid/config"
+import type { Config } from "vike/types"
+import Layout from "../layouts/LayoutDefault.js"
 
 export default {
   Layout,
@@ -15,4 +15,4 @@ export default {
   bodyAttributes: {
     class: "bg-zinc-100 text-foreground"
   }
-} satisfies Config;
+} satisfies Config

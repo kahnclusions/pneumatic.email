@@ -4,10 +4,7 @@
     "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "types": [
-      "vite/client",
-      "vike-solid/client"
-    ],
+    "types": ["vite/client", "vike-solid/client"],
     "skipLibCheck": true,
 
     "baseUrl": "./",

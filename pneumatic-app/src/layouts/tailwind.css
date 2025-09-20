@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @layer base {
   :root {
@@ -106,9 +106,9 @@
 
 @layer components {
   .typo-h1 {
-    @apply text-3xl font-semibold
+    @apply text-3xl font-semibold;
   }
   .typo-base-normal {
-    @apply text-base font-normal
+    @apply text-base font-normal;
   }
 }

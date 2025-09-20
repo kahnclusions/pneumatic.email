@@ -1,4 +1,5 @@
 /* Links */
-a, button {
+a,
+button {
   cursor: pointer;
 }

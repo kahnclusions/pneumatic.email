@@ -1,13 +1,10 @@
-import type { Config } from 'tailwindcss';
-import animatePlugin from "tailwindcss-animate";
+import type { Config } from "tailwindcss"
+import animatePlugin from "tailwindcss-animate"
 import defaultTheme from "tailwindcss/defaultTheme"
 
 const config: Config = {
   darkMode: ["class", '[data-kb-theme="dark"]'],
-  content: [
-    './index.html',
-    './src/**/*.{js,ts,jsx,tsx,css,md,mdx,html,json,scss}',
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx,css,md,mdx,html,json,scss}"],
   theme: {
     extend: {
       container: {
@@ -89,4 +86,4 @@ const config: Config = {
   plugins: [animatePlugin]
 }
 
-export default config;
+export default config

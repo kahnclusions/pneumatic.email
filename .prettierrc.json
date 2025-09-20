@@ -1,0 +1,10 @@
+{
+  "arrowParens": "avoid",
+  "singleQuote": false,
+  "printWidth": 100,
+  "semi": false,
+  "trailingComma": "none",
+  "plugins": ["prettier-plugin-tailwindcss", "@ianvs/prettier-plugin-sort-imports"],
+  "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
+  "importOrderTypeScriptVersion": "5.6.3"
+}
