@@ -1,7 +1,9 @@
 use std::str::FromStr;
 
 use anyhow::bail;
-use pneumatic_jmap::oauth::{exchange_code_for_token, lookup_oauth_server, start_authentication, OAuthChallenge};
+use pneumatic_jmap::oauth::{
+    exchange_code_for_token, lookup_oauth_server, start_authentication, OAuthChallenge,
+};
 use serde::Serialize;
 use tauri::{AppHandle, Emitter, EventTarget, Manager};
 use tauri_plugin_opener::OpenerExt;
@@ -41,7 +43,16 @@ pub async fn oauth_start(
             "Internal server error".to_string()
         })?;
 
-    state.challenge_repo.insert_challenge(email, &server_url, &challenge.csrf_token, &challenge.verifier, &challenge.auth_url).await
+    state
+        .challenge_repo
+        .insert_challenge(
+            email,
+            &server_url,
+            &challenge.csrf_token,
+            &challenge.verifier,
+            &challenge.auth_url,
+        )
+        .await
         .map_err(|err| {
             tracing::error!("{err:?}");
             println!("{err:?}");
@@ -85,25 +96,27 @@ pub async fn oauth_callback(handle: AppHandle, url: String) -> anyhow::Result<()
     };
     let challenge = state.challenge_repo.get_challenge(&csrf_token).await?;
     let server_url = challenge.server_url.clone();
-    let challenge = OAuthChallenge { 
-      id: challenge.id,
-      email: challenge.email,
-      server_url: challenge.server_url,
-      csrf_token: challenge.csrf_token,
-      verifier: challenge.verifier,
-      token_url: challenge.token_url
+    let challenge = OAuthChallenge {
+        id: challenge.id,
+        email: challenge.email,
+        server_url: challenge.server_url,
+        csrf_token: challenge.csrf_token,
+        verifier: challenge.verifier,
+        token_url: challenge.token_url,
     };
-    let jmap_access =
-        exchange_code_for_token(&auth_code, challenge).await?;
+    let jmap_access = exchange_code_for_token(&auth_code, challenge).await?;
 
-    let account = state.account_repo.upsert_account(
-      &server_url,
-      jmap_access.access_token,
-      jmap_access.refresh_token,
-      jmap_access.expires,
-      &jmap_access.username,
-      &jmap_access.account_name
-    ).await?;
+    let account = state
+        .account_repo
+        .upsert_account(
+            &server_url,
+            jmap_access.access_token,
+            jmap_access.refresh_token,
+            jmap_access.expires,
+            &jmap_access.username,
+            &jmap_access.account_name,
+        )
+        .await?;
 
     // let credentials = Credentials::bearer(account.access_token.clone());
     // let client = Client::new()

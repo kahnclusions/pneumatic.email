@@ -1,12 +1,12 @@
 mod cmd;
 mod macos;
-mod state;
 mod oauth;
 mod settings;
+mod state;
 
+use pneumatic_data::{account::AccountRepo, db::init_db, oauth2_challenge::OAuth2ChallengeRepo};
 #[cfg(desktop)]
 use std::path::PathBuf;
-use pneumatic_data::{account::AccountRepo, db::init_db, oauth2_challenge::OAuth2ChallengeRepo};
 #[cfg(target_os = "macos")]
 use tauri::TitleBarStyle;
 use tauri::{utils::config::BackgroundThrottlingPolicy, WebviewUrl, WebviewWindowBuilder};
@@ -16,7 +16,11 @@ use tauri::{AppHandle, Listener, Manager, Url};
 use tauri_plugin_fs::FsExt;
 use tauri_plugin_store::StoreExt;
 
-use crate::{oauth::{oauth_start, open_url}, settings::get_settings, state::AppState};
+use crate::{
+    oauth::{oauth_start, open_url},
+    settings::get_settings,
+    state::AppState,
+};
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
@@ -67,12 +71,20 @@ pub fn run() {
             // Initialize the database.
             let handle = app.handle().to_owned();
             tauri::async_runtime::block_on(async move {
-                let mut data_dir = handle.path().app_data_dir().expect("failed to get data_dir");
+                let mut data_dir = handle
+                    .path()
+                    .app_data_dir()
+                    .expect("failed to get data_dir");
                 let db = init_db(&data_dir).await;
                 let account_repo = AccountRepo::new(&db);
                 let challenge_repo = OAuth2ChallengeRepo::new(&db);
                 tracing::info!("Database initialized");
-                handle.manage(AppState { db, store, account_repo, challenge_repo });
+                handle.manage(AppState {
+                    db,
+                    store,
+                    account_repo,
+                    challenge_repo,
+                });
             });
 
             // Setup deep links, primarily to handle OAuth callbacks.

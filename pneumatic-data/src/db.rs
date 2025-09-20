@@ -1,12 +1,12 @@
 use std::path::Path;
 
-use sqlx::{migrate::MigrateDatabase, sqlite::SqlitePoolOptions, Sqlite, SqlitePool};
+use sqlx::{Sqlite, SqlitePool, migrate::MigrateDatabase, sqlite::SqlitePoolOptions};
 
 pub type Db = SqlitePool;
 
 #[tracing::instrument]
 pub async fn init_db(path: &Path) -> SqlitePool {
-  let mut path = path.to_owned();
+    let mut path = path.to_owned();
     match std::fs::create_dir_all(path.clone()) {
         Ok(_) => {}
         Err(err) => {

@@ -1,20 +1,20 @@
 use chrono::{DateTime, Utc};
+use hickory_client::client::{Client, SyncClient};
+use hickory_client::op::DnsResponse;
+use hickory_client::rr::{DNSClass, Name, RData, Record, RecordType};
+use hickory_client::udp::UdpClientConnection;
 use oauth2::basic::BasicClient;
-use oauth2::{reqwest, AuthType, EndpointNotSet, PkceCodeVerifier};
+use oauth2::{AuthType, EndpointNotSet, PkceCodeVerifier, reqwest};
 use oauth2::{
     AuthUrl, AuthorizationCode, ClientId, ClientSecret, CsrfToken, PkceCodeChallenge, RedirectUrl,
     Scope, TokenResponse, TokenUrl,
 };
 use serde::{Deserialize, Serialize};
-use hickory_client::client::{Client, SyncClient};
-use hickory_client::op::DnsResponse;
-use hickory_client::rr::{DNSClass, Name, RData, Record, RecordType};
-use hickory_client::udp::UdpClientConnection;
 use tokio::task::spawn_blocking;
 
 use crate::account::get_jmap_account;
 
-/// Details of a JMAP server that we can use OAuth to 
+/// Details of a JMAP server that we can use OAuth to
 /// authenticate with.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct JmapOauthServer {
@@ -62,7 +62,7 @@ pub async fn lookup_jmap_domain(email: &str) -> anyhow::Result<String> {
     Ok(domain)
 }
 
-/// Given a base URL, which can be just a domain name, lookup its .well-known directory 
+/// Given a base URL, which can be just a domain name, lookup its .well-known directory
 /// to find an oauth server, which tells us we can use oauth to login with this server.
 #[tracing::instrument]
 pub async fn lookup_oauth_server(base_url: &str) -> anyhow::Result<(String, JmapOauthServer)> {
@@ -119,9 +119,9 @@ fn get_client() -> anyhow::Result<
 }
 
 pub struct JmapOauthChallenge {
-  pub auth_url: String,
-  pub csrf_token: String,
-  pub verifier: String
+    pub auth_url: String,
+    pub csrf_token: String,
+    pub verifier: String,
 }
 
 #[tracing::instrument(skip(email))]
@@ -145,10 +145,10 @@ pub async fn start_authentication(
         .set_pkce_challenge(pkce_challenge)
         .url();
 
-    Ok(JmapOauthChallenge { 
-      auth_url: auth_url.to_string(), 
-      verifier: pkce_verifier.secret().to_string(), 
-      csrf_token: csrf_token.secret().to_owned() 
+    Ok(JmapOauthChallenge {
+        auth_url: auth_url.to_string(),
+        verifier: pkce_verifier.secret().to_string(),
+        csrf_token: csrf_token.secret().to_owned(),
     })
 }
 
@@ -164,11 +164,11 @@ pub struct OAuthChallenge {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct JmapOauthAccessToken {
-  pub access_token: String,
-  pub refresh_token: Option<String>,
-  pub expires: Option<DateTime<Utc>>,
-  pub username: String,
-  pub account_name: String
+    pub access_token: String,
+    pub refresh_token: Option<String>,
+    pub expires: Option<DateTime<Utc>>,
+    pub username: String,
+    pub account_name: String,
 }
 
 /// Given an auth_code from a successful oauth login, and the challenge that
@@ -212,11 +212,10 @@ pub async fn exchange_code_for_token(
     let (username, account_name) = get_jmap_account(&challenge.server_url, &access_token).await?;
 
     Ok(JmapOauthAccessToken {
-      access_token,
-      refresh_token,
-      expires,
-      username,
-      account_name
+        access_token,
+        refresh_token,
+        expires,
+        username,
+        account_name,
     })
 }
-

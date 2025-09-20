@@ -14,7 +14,7 @@ pub enum ThemeMode {
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct PneumaticSettings {
-    pub theme_mode: ThemeMode
+    pub theme_mode: ThemeMode,
 }
 
 #[tauri::command]
@@ -26,6 +26,6 @@ pub async fn get_settings(
             .map_err(|err| anyhow!(err))?;
 
     Ok(PneumaticSettings {
-        theme_mode: theme_mode.unwrap_or(ThemeMode::System)
+        theme_mode: theme_mode.unwrap_or(ThemeMode::System),
     })
 }
